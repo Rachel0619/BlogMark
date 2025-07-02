@@ -5,7 +5,7 @@
 ### Problem Statement
 Tech professionals read numerous blog posts daily but struggle to:
 - Remember specific content from articles read weeks/months ago
-- Find connections between different posts they've saved
+- Find connections between different posts they've read
 - Search through their reading history effectively
 - Leverage their accumulated knowledge for current work
 
@@ -14,7 +14,7 @@ A personal RAG-powered knowledge base that transforms saved blog links into an i
 
 ## **2. Target Users**
 
-**Primary User:** Data scientists, software engineers, tech leads who:
+**Primary User:** Tech professionals who:
 - Read 5-15 technical blog posts per week
 - Save links in various places (bookmarks, notion, spreadsheets)
 - Need to reference past reading for current projects
@@ -30,7 +30,7 @@ A personal RAG-powered knowledge base that transforms saved blog links into an i
 ### Functional Requirements
 
 **Must Have (MVP):**
-- Import blog URLs from Excel file (link, category, date_added)
+- Collect blog URLs (link, category, date_added) using a Google Chrome extension
 - Extract content from blog URLs automatically
 - Generate embeddings for semantic search
 - Store embeddings in local vector database
@@ -39,67 +39,44 @@ A personal RAG-powered knowledge base that transforms saved blog links into an i
 
 **Should Have (V2):**
 - Web interface for search (currently CLI/script)
-- Support for multiple file formats (CSV, Notion export)
-- Content categorization and filtering
+- Support for importing existing files (CSV, Notion export, etc.)
 - Similarity scoring and ranking
-- Export search results
 
 **Could Have (Future):**
-- Browser extension for link collection
-- Multi-user support
 - Cloud deployment option
-- Integration with note-taking apps
+- Agentic RAG (autonomous retrieval-augmented generation workflows)
 
 ### Non-Functional Requirements
 
 **Performance:**
 - Process 100 URLs in under 10 minutes
-- Search queries return results in <2 seconds
-- Support up to 1000 blog posts initially
+- Search queries return results in <10 seconds
+- Support up to 100 blog posts initially
 
 **Privacy & Security:**
 - All data stored locally
-- No external API calls for content (embeddings API acceptable)
 - User controls all data
 
 **Usability:**
-- Simple Python scripts (user knows Python)
 - Clear error messages for failed URL extractions
 - Progress indicators for batch processing
 
-## **4. User Stories**
-
-### Epic 1: Content Collection
-- **As a** tech professional, **I want to** import my saved blog links from an Excel file **so that** I can process my existing collection
-- **As a** user, **I want to** see progress when URLs are being processed **so that** I know the system is working
-- **As a** user, **I want to** handle failed extractions gracefully **so that** one bad URL doesn't break the entire process
-
-### Epic 2: Content Processing
-- **As a** user, **I want to** extract clean text content from blog posts **so that** the search focuses on actual content, not navigation/ads
-- **As a** user, **I want to** chunk long articles appropriately **so that** search results are specific and relevant
-- **As a** user, **I want to** preserve metadata (category, date, source) **so that** I can filter and trace results
-
-### Epic 3: Search & Retrieval
-- **As a** user, **I want to** search using natural language **so that** I can find content without remembering exact keywords
-- **As a** user, **I want to** see source URLs and dates **so that** I can access the original articles
-- **As a** user, **I want to** get multiple relevant results **so that** I can compare different perspectives
-
-## **5. Technical Specifications**
+## **4. Technical Specifications**
 
 ### Architecture
 ```
-Excel File → Content Extractor → Embedder → Vector DB → Search Interface
+Chrome extention → Content Extractor → Embedder → Vector DB → RAG → Search Interface
 ```
 
 ### Technology Stack
-- **Language:** Python (user's expertise)
+- **Language:** Python
 - **Dependencies:** pandas, requests, beautifulsoup4, sentence-transformers, chromadb
 - **Embedding Model:** sentence-transformers (local) or OpenAI API
 - **Vector DB:** ChromaDB (local, simple)
 - **Package Manager:** uv
 
 ### Data Flow
-1. Read Excel file with pandas
+1. Read Excel file with pandas (will migrate to chrome extension later)
 2. For each URL: extract content, clean text, chunk
 3. Generate embeddings for chunks
 4. Store in ChromaDB with metadata
@@ -111,7 +88,7 @@ Excel File → Content Extractor → Embedder → Vector DB → Search Interface
 - Log extraction failures
 - Continue processing remaining URLs
 
-## **6. Success Metrics**
+## **5. Success Metrics**
 
 ### MVP Success Criteria
 - Successfully processes 80%+ of valid blog URLs
@@ -125,27 +102,27 @@ Excel File → Content Extractor → Embedder → Vector DB → Search Interface
 - Processing speed (URLs per minute)
 - System reliability (error rate)
 
-## **7. Implementation Phases**
+## **6. Implementation Phases**
 
-### Phase 1: Core Pipeline (Week 1)
+### Phase 1: Core Pipeline
 - Excel file reader
 - Content extractor (requests + BeautifulSoup)
 - Basic embedding generation
 - ChromaDB storage
 
-### Phase 2: Search & Polish (Week 2)
+### Phase 2: Search & Polish
 - Search interface (CLI)
 - Error handling and logging
 - Testing with real data
 - Documentation
 
-### Phase 3: Enhancement (Week 3+)
-- Web interface (Streamlit)
+### Phase 3: Enhancement
+- Web interface (Streamlit or Gradio)
 - Advanced search features
 - Performance optimization
 - User feedback integration
 
-## **8. Risks & Mitigation**
+## **7. Risks & Mitigation**
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
@@ -153,19 +130,3 @@ Excel File → Content Extractor → Embedder → Vector DB → Search Interface
 | Embedding quality poor | Medium | Test different models, allow model switching |
 | ChromaDB performance issues | Medium | Implement pagination, consider alternatives |
 | User Excel format varies | Low | Flexible column mapping, validation |
-
-## **9. Out of Scope (For MVP)**
-- Real-time link collection
-- Multi-user features
-- Advanced NLP (summarization, tagging)
-- Integration with external services
-- Mobile interface
-
----
-
-**Next Steps:**
-1. Set up development environment with uv
-2. Create project structure
-3. Implement Phase 1 components
-4. Test with sample data
-5. Iterate based on results
